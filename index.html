@@ -133,31 +133,9 @@
     @keyframes rise{from{transform:translateY(14px)}to{transform:none}}
   }
 
-  /* release gate */
-  #gate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;text-align:center;padding:24px 20px;
-    background:linear-gradient(180deg,rgba(11,20,80,.95),rgba(27,42,156,.88)),url("assets/gedung.jpg") center/cover no-repeat}
-  #gate .box{max-width:420px;display:grid;gap:14px;justify-items:center}
-  #gate h2{margin:6px 0 0;color:var(--gold)}
-  #gate p{margin:0;color:var(--muted)}
-  #gate .count{justify-content:center}
-  body.locked{overflow:hidden}
-  body.locked > header, body.locked > .wrap{visibility:hidden}
 </style>
 </head>
-<body class="locked">
-<div id="gate">
-  <div class="box">
-    <div class="logo"><img src="assets/logo.png" alt="Logo SMK Mitra Industri MM2100"></div>
-    <h2>Konfirmasi Segera Dibuka</h2>
-    <p>Konfirmasi kehadiran Ground Breaking Ceremony MM2100 TVET Centre dapat diisi mulai <b style="color:var(--ink)" id="gateTime">Jumat, 25 September 2026 pukul 20.00 WIB</b>.</p>
-    <div class="count" aria-live="polite">
-      <div><b id="gh">–</b><span>jam</span></div>
-      <div><b id="gm">–</b><span>menit</span></div>
-      <div><b id="gs">–</b><span>detik</span></div>
-    </div>
-    <p style="font-size:13px">Halaman ini terbuka otomatis. Simpan link ini dan buka kembali nanti.</p>
-  </div>
-</div>
+<body>
 
 <header class="hero">
   <div class="wrap">
@@ -222,29 +200,8 @@
 </div>
 
 <script>
-/* ==== Waktu halaman konfirmasi mulai bisa dibuka (WIB) ==== */
-const OPEN_AT = new Date("2026-09-25T20:00:00+07:00");
-
-(function releaseGate(){
-  // Link khusus panitia untuk mengecek isi sebelum waktu buka: tambahkan #preview di akhir link
-  if (location.hash.toLowerCase() === "#preview"){ document.getElementById("gate").remove(); document.body.classList.remove("locked"); return; }
-  let offset = 0; // server time minus device time, so a wrong phone clock can't open it early
-  fetch(location.pathname, {method:"HEAD", cache:"no-store"}).then(r => {
-    const d = Date.parse(r.headers.get("date")); if (d) offset = d - Date.now();
-  }).catch(() => {}).finally(tick);
-  const gh=document.getElementById("gh"), gm=document.getElementById("gm"), gs=document.getElementById("gs");
-  let timer;
-  function tick(){
-    const ms = OPEN_AT - (Date.now() + offset);
-    if (ms <= 0){ clearInterval(timer); document.getElementById("gate").remove(); document.body.classList.remove("locked"); return; }
-    const s = Math.floor(ms/1000);
-    gh.textContent = Math.floor(s/3600); gm.textContent = String(Math.floor(s/60)%60).padStart(2,"0"); gs.textContent = String(s%60).padStart(2,"0");
-  }
-  tick(); timer = setInterval(tick, 1000);
-})();
 /* Nomor WhatsApp panitia (format 62…, tanpa + atau spasi) */
 const WA_PANITIA = "6285715689618";
-const EVENT_START = new Date("2026-10-14T09:00:00+07:00");
 
 /* Link personal: #Nama_Tamu di akhir link mengisi nama otomatis (garis bawah = spasi) */
 (function personalize(){
