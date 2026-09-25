@@ -222,6 +222,8 @@
 const OPEN_AT = new Date("2026-09-25T20:00:00+07:00");
 
 (function releaseGate(){
+  // Link khusus panitia untuk mengecek isi sebelum waktu buka: tambahkan #preview di akhir link
+  if (location.hash.toLowerCase() === "#preview"){ document.getElementById("gate").remove(); document.body.classList.remove("locked"); return; }
   let offset = 0; // server time minus device time, so a wrong phone clock can't open it early
   fetch(location.pathname, {method:"HEAD", cache:"no-store"}).then(r => {
     const d = Date.parse(r.headers.get("date")); if (d) offset = d - Date.now();
@@ -243,7 +245,7 @@ const EVENT_START = new Date("2026-10-14T09:00:00+07:00");
 /* Link personal: #Nama_Tamu di akhir link mengisi nama otomatis (garis bawah = spasi) */
 (function personalize(){
   const h = decodeURIComponent((location.hash || "").slice(1)).replace(/[_~.]+/g," ").trim();
-  if (h && h !== "rsvp") {
+  if (h && !/^(rsvp|preview)$/i.test(h)) {
     const n = document.getElementById("nama"); if (!n.value) n.value = h.replace(/^(Bapak|Ibu|Bpk|Mr|Mrs|Ms)\s+/i,"");
   }
 })();
